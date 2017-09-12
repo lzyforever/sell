@@ -51,7 +51,7 @@
                  ref="shopcart"
       ></shop-cart>
     </div>
-    <food :food="selectedFood"></food>
+    <food :food="selectedFood" v-on:cartAdd="drop" ref="food"></food>
   </div>
 </template>
 
@@ -164,6 +164,7 @@
           return
         }
         this.selectedFood = food
+        this.$refs.food.show()
       }
     }
   }
