@@ -12,29 +12,38 @@
         <router-link :to="{path:'seller'}">商家</router-link>
       </div>
     </div>
-    <router-view :seller="seller"></router-view>
+    <keep-alive>
+      <router-view :seller="seller"></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script>
   import Header from './components/header/header'
+  import {urlParse} from './common/js/util'
 
   const ERR_OR = 0
 
   export default {
     data () {
       return {
-        seller: {}
+        seller: {
+          id: (() => {
+            let queryParam = urlParse()
+            return queryParam.id
+          })()
+        }
       }
     },
     components: {
       VHeader: Header
     },
     created () {
-      this.$router.push('goods')
-      this.$http.get('/api/seller').then((res) => {
+      // this.$router.push('goods') // 默认跳转页面
+      this.$http.get('/api/seller?id=' + this.seller.id).then((res) => {
         if (res.body.errno === ERR_OR) {
-          this.seller = res.body.data
+          // this.seller = res.body.data
+          this.seller = Object.assign({}, this.seller, res.body.data)
         }
       }, (err) => {
         console.log('no data error !', err)
